@@ -1,0 +1,62 @@
+
+<div class="jumbotron">
+     <h2><%= gettext "Welcome to %{name}!", name: "Phoenix" %></h2>
+     <p class="lead">A productive web framework that<br />does not compromise speed and maintainability.</p>
+</div>
+<h4>Kindly find below the List of future Events:</h4>
+<ul>
+  <%= for event <- @events do %>
+    <li><%= event.title %>, <%= event.due %></li>
+  <% end %>
+</ul>
+
+<%= for event <- @events do %>
+    <div class="jumbotron">
+      <span class="h1">Days until <%= event.title %></span>
+      <%!-- <p class="text-center"><span class="countdownClock" data-due="<%= event.due %>"></span></p> --%>
+      <p class="text-center"><span class="countdownClock" data-due="{@event.due}"></span></p>
+    </div>
+<% end %>
+
+<div class="container-segment">
+      <div class="segment-title">Hours</div>
+      <div class="segment">
+        <div class="flip-card" data-hours-tens>
+          <div class="top">2</div>
+          <div class="bottom">2</div>
+        </div>
+        <div class="flip-card" data-hours-ones>
+          <div class="top">4</div>
+          <div class="bottom">4</div>
+        </div>
+      </div>
+    </div>
+    <div class="container-segment">
+      <div class="segment-title">Minutes</div>
+      <div class="segment">
+        <div class="flip-card" data-minutes-tens>
+          <div class="top">0</div>
+          <div class="bottom">0</div>
+        </div>
+        <div class="flip-card" data-minutes-ones>
+          <div class="top">0</div>
+          <div class="bottom">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="container-segment">
+      <div class="segment-title">Seconds</div>
+      <div class="segment">
+        <div class="flip-card" data-seconds-tens>
+          <div class="top">0</div>
+          <div class="bottom">0</div>
+        </div>
+        <div class="flip-card" data-seconds-ones>
+          <div class="top">0</div>
+          <div class="bottom">0</div>
+        </div>
+      </div>
+    </div>
+
+
+

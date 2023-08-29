@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" class="[scrollbar-gutter:stable]">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title suffix=" · Phoenix Framework">
+      <%= assigns[:page_title] || "Countdown" %>
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.min.css" />
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flipclock/0.7.8/flipclock.min.js"></script>
+
+    <style>
+      /* This file is for your main application css. */
+
+  .auth0-logo {
+    width: 200px;
+    height: 80px;
+    display: inline-block;
+    background-image: url(http://placehold.jp/ffffff/003366/200x80.png?text=Auth0%20meets%0AElixir);
+    background-repeat: no-repeat;
+    background-size: 200px;
+  }
+
+  .jumbotron .flip-clock-wrapper {
+    text-align: center;
+    position: relative;
+    width: auto;
+    margin-top: 8em;
+    display: inline-block;
+ }
+/***********/
+.flip-card {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, .2);
+  border-radius: .1em;
+}
+
+.top,
+.bottom,
+.flip-card .top-flip,
+.flip-card .bottom-flip {
+  height: .75em;
+  line-height: 1;
+  padding: .25em;
+  overflow: hidden;
+}
+
+.top,
+.flip-card .top-flip {
+  background-color: #f7f7f7;
+  border-top-right-radius: .1em;
+  border-top-left-radius: .1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.bottom,
+.flip-card .bottom-flip {
+  background-color: white;
+  display: flex;
+  align-items: flex-end;
+  border-bottom-right-radius: .1em;
+  border-bottom-left-radius: .1em;
+}
+
+.flip-card .top-flip {
+  position: absolute;
+  width: 100%;
+  animation: flip-top 250ms ease-in;
+  transform-origin: bottom;
+}
+
+@keyframes flip-top {
+  100% {
+    transform: rotateX(90deg);
+  }
+}
+
+.flip-card .bottom-flip {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  animation: flip-bottom 250ms ease-out 250ms;
+  transform-origin: top;
+  transform: rotateX(90deg);
+}
+
+@keyframes flip-bottom {
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+
+/*.container {
+  display: flex;
+  gap: .5em;
+  justify-content: center;
+}*/
+
+.container-segment {
+  display: flex;
+  flex-direction: column;
+  gap: .1em;
+  align-items: center;
+}
+
+.segment {
+  display: flex;
+  gap: .1em;
+}
+
+.segment-title {
+  font-size: 1rem;
+}
+
+
+
+
+/***********/
+
+
+    </style>   
+  </head>
+  <body class="bg-white antialiased">
+    <%= @inner_content %>
+  </body>
+  <script>
+    $(document).ready(function() {
+        $('.countdownClock').each(function(i, el) {
+          var today = new Date();
+          var due = new Date($(el).data('due'));
+          $(el).FlipClock((due/1000) - (today/1000), {
+              clockFace: 'DailyCounter',
+                countdown: true,
+                showSeconds: false
+          });
+        });
+    });
+
+    const countToDate = new Date().setHours(new Date().getHours() + 24)
+      let previousTimeBetweenDates
+      setInterval(() => {
+        const currentDate = new Date()
+        const timeBetweenDates = Math.ceil((countToDate - currentDate) / 1000)
+        flipAllCards(timeBetweenDates)
+
+        previousTimeBetweenDates = timeBetweenDates
+      }, 250)
+
+      function flipAllCards(time) {
+        const seconds = time % 60
+        const minutes = Math.floor(time / 60) % 60
+        const hours = Math.floor(time / 3600)
+
+        flip(document.querySelector("[data-hours-tens]"), Math.floor(hours / 10))
+        flip(document.querySelector("[data-hours-ones]"), hours % 10)
+        flip(document.querySelector("[data-minutes-tens]"), Math.floor(minutes / 10))
+        flip(document.querySelector("[data-minutes-ones]"), minutes % 10)
+        flip(document.querySelector("[data-seconds-tens]"), Math.floor(seconds / 10))
+        flip(document.querySelector("[data-seconds-ones]"), seconds % 10)
+      }
+
+      function flip(flipCard, newNumber) {
+        const topHalf = flipCard.querySelector(".top")
+        const startNumber = parseInt(topHalf.textContent)
+        if (newNumber === startNumber) return
+
+        const bottomHalf = flipCard.querySelector(".bottom")
+        const topFlip = document.createElement("div")
+        topFlip.classList.add("top-flip")
+        const bottomFlip = document.createElement("div")
+        bottomFlip.classList.add("bottom-flip")
+
+        top.textContent = startNumber
+        bottomHalf.textContent = startNumber
+        topFlip.textContent = startNumber
+        bottomFlip.textContent = newNumber
+
+        topFlip.addEventListener("animationstart", e => {
+          topHalf.textContent = newNumber
+        })
+        topFlip.addEventListener("animationend", e => {
+          topFlip.remove()
+        })
+        bottomFlip.addEventListener("animationend", e => {
+          bottomHalf.textContent = newNumber
+          bottomFlip.remove()
+        })
+        flipCard.append(topFlip, bottomFlip)
+      }
+</script>
+</html>
